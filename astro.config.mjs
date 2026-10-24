@@ -59,6 +59,45 @@ if (process.env.NODE_ENV === "development") {
 	setMaxListeners(20);
 }
 
+// ─── 字体 CDN 镜像 ─────────────────────────────────────────────
+// Astro Font API 的内置 fontsource provider 把字体文件地址硬编码在
+// unifont 里（https://cdn.jsdelivr.net/fontsource/fonts/...），无法通过配置项修改。
+// 该域名在部分网络环境下不可达，会让 `pnpm build` 抛出 CannotFetchFontFile。
+// fastly.jsdelivr.net 是 jsDelivr 官方镜像，内容一致，这里统一改写字体文件 URL。
+// 如需换回默认域名，把 FONT_CDN_MIRROR 改成 "https://cdn.jsdelivr.net/" 即可。
+const FONT_CDN_ORIGIN = "https://cdn.jsdelivr.net/";
+const FONT_CDN_MIRROR = "https://fastly.jsdelivr.net/";
+
+function rewriteFontCdn(url) {
+	if (typeof url !== "string" || !url.startsWith(FONT_CDN_ORIGIN)) return url;
+	return FONT_CDN_MIRROR + url.slice(FONT_CDN_ORIGIN.length);
+}
+
+// 包装内置 provider：保留其原有解析逻辑，只把返回的字体文件 URL 指向镜像。
+// 自定义 provider 只需暴露 name 与 resolveFont（见 astro 的 _FontProviderSchema）。
+function withFontCdnMirror(provider) {
+	return {
+		name: provider.name,
+		...(provider.config ? { config: provider.config } : {}),
+		...(provider.init ? { init: provider.init } : {}),
+		...(provider.listFonts ? { listFonts: provider.listFonts } : {}),
+		async resolveFont(options) {
+			const resolved = await provider.resolveFont(options);
+			if (!resolved?.fonts) return resolved;
+			return {
+				...resolved,
+				fonts: resolved.fonts.map((font) => ({
+					...font,
+					src: font.src.map((source) => ({
+						...source,
+						url: rewriteFontCdn(source.url),
+					})),
+				})),
+			};
+		},
+	};
+}
+
 const adapter = process.env.CF_WORKERS
 	? cloudflare({
 			prerenderEnvironment: "node",
@@ -87,7 +126,7 @@ export default defineConfig({
 						provider = fontProviders.google();
 						break;
 					case "fontsource":
-						provider = fontProviders.fontsource();
+						provider = withFontCdnMirror(fontProviders.fontsource());
 						break;
 					case "local":
 						provider = fontProviders.local();
