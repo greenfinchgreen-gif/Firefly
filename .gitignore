@@ -15,10 +15,14 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+*.log
+logs/
 
 # environment variables
 .env
 .env.production
+.env.local
+.env.*.local
 
 # macOS-specific files
 .DS_Store
@@ -43,7 +47,41 @@ cache/
 package/
 .obsidian/
 
-# vibe coding
+# ---- AI 编码代理：推理记忆与本地状态（不入库）----
 .codex*
-.claude
-.mimocode
+.claude*
+.mimocode*
+.cursor*
+.windsurf*
+.trae*
+.qoder*
+.opencode*
+.aider*
+.continue*
+.clinerules*
+.roo*
+.dsh*
+.workbuddy*
+memory/
+.ai/
+*.memory.md
+MEMORY.md
+SOUL.md
+IDENTITY.md
+USER.md
+
+# ---- 临时文件与本地缓存（不入库）----
+.tmp/
+.tmp-*
+tmp/
+*.tmp
+*.temp
+*.bak
+*.orig
+*.rej
+*.swp
+*.swo
+*~
+.pnpm-store/
+.cache/
+*.tsbuildinfo
