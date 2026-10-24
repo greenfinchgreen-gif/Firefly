@@ -24,13 +24,6 @@ seriesOrder: 6
 
 > 密码为 `123456`，仅供测试使用。
 
-## 图片
-
-![Firefly](./images/1.avif)
-
-## GitHub 仓库卡片
-
-::github{repo="CuteLeaf/Firefly"}
 
 ## 提示框
 

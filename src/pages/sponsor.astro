@@ -85,14 +85,29 @@ function getQrLqipProps(qrCode: string) {
 
                         <!-- 二维码或链接 -->
                         {method.qrCode && (
-                          <div class="relative w-full max-w-[200px] aspect-square bg-white rounded-lg p-4 shadow-md mb-4 overflow-hidden">
+                          <div class="group relative w-full max-w-[220px] aspect-square bg-white rounded-lg p-4 shadow-md mb-4 overflow-hidden">
                             <div class="lqip-placeholder absolute inset-0 rounded-lg pointer-events-none" style={getQrLqipProps(method.qrCode).style} aria-hidden="true"></div>
-                            <img
-                              src={url(method.qrCode)}
-                              alt={`${method.name} ${i18n(I18nKey.scanToSponsor)}`}
-                              class="relative w-full h-full object-contain opacity-0 transition-opacity duration-500 ease-out"
-                              loading="lazy"
-                            />
+                            <!-- 点击交给 Fancybox 灯箱放大（沿用项目 PhotoCard 的 div[data-fancybox] 写法，避免 <a> 被 Swup 拦走） -->
+                            <div
+                              data-fancybox="sponsor-qrcode"
+                              data-src={url(method.qrCode)}
+                              data-type="image"
+                              role="button"
+                              tabindex="0"
+                              aria-label={`${i18n(I18nKey.scanToSponsor)} - ${method.name}`}
+                              class="relative block h-full w-full cursor-zoom-in rounded-md outline-none focus-visible:ring-2 focus-visible:ring-(--primary) focus-visible:ring-offset-1"
+                            >
+                              <img
+                                src={url(method.qrCode)}
+                                alt={`${method.name} ${i18n(I18nKey.scanToSponsor)}`}
+                                class="w-full h-full object-contain opacity-0 transition-opacity duration-500 ease-out"
+                                loading="lazy"
+                              />
+                              <!-- 放大提示角标 -->
+                              <span class="pointer-events-none absolute bottom-1 right-1 flex h-7 w-7 items-center justify-center rounded-full bg-black/55 text-white opacity-0 shadow-sm backdrop-blur-xs transition-opacity duration-200 group-hover:opacity-100 group-focus-within:opacity-100" aria-hidden="true">
+                                <Icon name="material-symbols:zoom-in-rounded" class="text-base" />
+                              </span>
+                            </div>
                           </div>
                         )}
 
@@ -192,6 +207,23 @@ function getQrLqipProps(qrCode: string) {
     </div>
   )}
 </MainGridLayout>
+
+<script>
+  // 二维码灯箱的键盘可达性：Fancybox 只响应指针事件，这里补齐 Enter / 空格。
+  // 用 document 级委托 + 全局守卫，避免 Swup 换页重跑脚本时重复绑定。
+  const qrKeyState = window as Window & { __sponsorQrKeydownBound?: boolean };
+  if (!qrKeyState.__sponsorQrKeydownBound) {
+    qrKeyState.__sponsorQrKeydownBound = true;
+    document.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter" && event.key !== " ") return;
+      const target = event.target;
+      if (!(target instanceof HTMLElement)) return;
+      if (!target.matches('[data-fancybox="sponsor-qrcode"]')) return;
+      event.preventDefault();
+      target.click();
+    });
+  }
+</script>
 
 <style>
   /* 透明模式下使用半透明背景 */
