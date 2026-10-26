@@ -1,27 +1,39 @@
-# 关于我 / About Me
+# 关于凌辞的博客
 
-你好！我是 **凌辞** ，一个在数字世界中默默无闻的一片叶子。
+我是**凌辞**。这里是一块记录网站运营、前端开发、内容方法与日常思考的长期空间。
 
-## 🛠️ 关于本站
+## 本站定位
 
-这个网站使用 **Astro** 框架构建，采用了 [Firefly](https://github.com/CuteLeaf/Firefly) 模板，Firefly 是基于 [Fuwari](https://github.com/saicaca/fuwari) 的二次开发。
+这个博客不追求把首页塞满所有功能，而是优先保证三件事：
 
-**Firefly** 是一款基于 Astro 框架和 Fuwari 模板开发的清新美观且现代化个人博客主题模板，专为技术爱好者和内容创作者设计。该主题融合了现代 Web 技术栈，提供了丰富的功能模块和高度可定制的界面，让您能够轻松打造出专业且美观的个人博客网站。
+1. **内容可读**：文章结构清楚，标题、摘要、分类和系列关系稳定。
+2. **入口可用**：没有真实数据或服务支持的页面不提前开放。
+3. **长期可维护**：配置、内容和部署规则都写成可复查的文档。
 
+## 技术栈
 
-**🖥️在线预览： [Firefly - Demo site](https://firefly.cuteleaf.cn/)**
+- **Astro 7**：静态站点生成与内容路由
+- **Svelte 5**：需要交互的岛屿组件
+- **TypeScript 6**：配置与数据结构约束
+- **Tailwind CSS 4**：页面样式与响应式布局
+- **Pagefind**：构建后的站内全文搜索
+- **GitHub Pages**：当前部署目标
 
-**📝Firefly使用文档： [https://docs-firefly.cuteleaf.cn](https://docs-firefly.cuteleaf.cn/)**
+## 内容方向
 
-**⭐Firefly开源地址：[https://github.com/CuteLeaf/Firefly](https://github.com/CuteLeaf/Firefly)** 
+- 网站运营：发布流程、信息架构、内容维护和检查清单
+- 技术笔记：Astro、前端工程、Markdown 与静态站点实践
+- 内容方法：系列组织、选题拆分、长期写作与复盘
+- 生活随笔：值得留下来的片段和阶段总结
 
-**⭐Fuwari开源地址：[https://github.com/saicaca/fuwari](https://github.com/saicaca/fuwari)**
+## 开源与版权
 
-::github{repo="CuteLeaf/Firefly"}
+本站基于开源项目 [Firefly](https://github.com/CuteLeaf/Firefly) 构建，Firefly 又延续了 [Fuwari](https://github.com/saicaca/fuwari) 的设计思路。
 
-::github{repo="saicaca/fuwari"}
+- 本站源码：[greenfinchgreen-gif/Firefly](https://github.com/greenfinchgreen-gif/Firefly)
+- Firefly 上游：[CuteLeaf/Firefly](https://github.com/CuteLeaf/Firefly)
+- Fuwari 上游：[saicaca/fuwari](https://github.com/saicaca/fuwari)
 
----
+本站保留上游项目的 MIT 许可、版权声明和页脚署名。文章默认采用 CC BY-NC-SA 4.0 许可，转载或引用时请保留来源。
 
-*感谢你的来访！希望在这里能找到对你有用的内容！*
-
+感谢来访。如果某篇文章对你有帮助，欢迎从 GitHub Issue 留下具体建议。

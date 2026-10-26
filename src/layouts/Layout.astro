@@ -137,7 +137,7 @@ let ogImageWidth: number | undefined;
 let ogImageHeight: number | undefined;
 const isGeneratedOg = siteConfig.post.generateOgImages && postSlug;
 if (isGeneratedOg) {
-	ogImageUrl = new URL(`/og/${postSlug}.png`, Astro.site).toString();
+	ogImageUrl = new URL(url(`/og/${postSlug}.png`), Astro.site).toString();
 	ogImageWidth = 1200;
 	ogImageHeight = 630;
 } else if (postCoverImage) {

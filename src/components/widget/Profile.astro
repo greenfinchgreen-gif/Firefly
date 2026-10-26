@@ -68,7 +68,8 @@ const className = Astro.props.class;
                             {showName && item.name}
                         </a>
                     } else {
-                        return <a rel="me" aria-label={item.name} href={item.url} target="_blank" class={className}>
+                        const href = item.url.startsWith("/") ? url(item.url) : item.url;
+                        return <a rel="me" aria-label={item.name} href={href} target={item.url.startsWith("http") ? "_blank" : undefined} class={className}>
                             <Icon name={item.icon} class="text-[1.5rem]"></Icon>
                             {showName && item.name}
                         </a>
@@ -84,7 +85,8 @@ const className = Astro.props.class;
                             {item.name}
                         </a>
                     } else {
-                        return <a rel="me" aria-label={item.name} href={item.url} target="_blank"
+                        const href = item.url.startsWith("/") ? url(item.url) : item.url;
+                        return <a rel="me" aria-label={item.name} href={href} target={item.url.startsWith("http") ? "_blank" : undefined}
                                             class="btn-regular rounded-lg h-10 gap-2 px-3 font-bold active:scale-95">
                                 <Icon name={item.icon} class="text-[1.5rem]"></Icon>
                                 {item.name}

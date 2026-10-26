@@ -4,6 +4,7 @@ import type {
 	BooknavGroup,
 	BooknavItem,
 } from "../types/booknavConfig";
+import { url } from "./url-utils";
 
 // 书签图标解析结果
 export type ResolvedBooknavIcon =
@@ -43,7 +44,10 @@ export function resolveBooknavIcon(
 
 	if (icon) {
 		// 网络图片或 public 目录图片
-		if (/^https?:\/\//.test(icon) || icon.startsWith("/")) {
+		if (icon.startsWith("/")) {
+			return { kind: "image", value: url(icon) };
+		}
+		if (/^https?:\/\//.test(icon)) {
 			return { kind: "image", value: icon };
 		}
 		// astro-icon 图标名

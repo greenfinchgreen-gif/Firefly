@@ -2,6 +2,7 @@ import rss, { type RSSFeedItem } from "@astrojs/rss";
 import { getSortedPosts } from "@utils/content-utils";
 import { formatDateI18nWithTime } from "@utils/date-utils";
 import { renderFeedEntries } from "@utils/feed-utils";
+import { url } from "@utils/url-utils";
 import type { APIContext } from "astro";
 import { siteConfig } from "@/config";
 import pkg from "../../package.json";
@@ -12,6 +13,8 @@ export async function GET(context: APIContext): Promise<Response> {
 	const includeContent = (siteConfig.feed?.contentMode ?? "full") === "full";
 	const blog = await getSortedPosts();
 	const entries = await renderFeedEntries(blog, { includeContent });
+	const site = context.site ?? new URL(siteConfig.site_url);
+	const feedSite = new URL(url("/"), site);
 	const feedItems: RSSFeedItem[] = entries.map((entry) => ({
 		title: entry.title,
 		pubDate: entry.published,
@@ -22,7 +25,7 @@ export async function GET(context: APIContext): Promise<Response> {
 	return rss({
 		title: siteConfig.title,
 		description: siteConfig.subtitle || "No description",
-		site: context.site ?? "https://firefly.cuteleaf.cn",
+		site: feedSite,
 		customData: `<templateTheme>Firefly</templateTheme>
 		<templateThemeVersion>${pkg.version}</templateThemeVersion>
 		<templateThemeUrl>https://github.com/CuteLeaf/Firefly</templateThemeUrl>

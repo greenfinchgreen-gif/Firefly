@@ -137,6 +137,14 @@ function renderRandomPosts() {
       return !excludeSet[p.id] && !p.password;
     });
 
+    // 文章较少时，相关推荐可能覆盖除当前文章外的全部内容。
+    // 此时允许已出现在相关推荐中的文章进入随机池，避免随机文章区域始终为空。
+    if (candidates.length === 0) {
+      candidates = allPosts.filter(function(p) {
+        return p.id !== currentId && !p.password;
+      });
+    }
+
     // Fisher-Yates shuffle
     for (var i = candidates.length - 1; i > 0; i--) {
       var j = Math.floor(Math.random() * (i + 1));

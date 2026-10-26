@@ -2,12 +2,14 @@
 import MainGridLayout from "@layouts/MainGridLayout.astro";
 import { getSortedPosts } from "@utils/content-utils";
 import { formatDateToYYYYMMDD } from "@utils/date-utils";
+import { getPostUrlBySlug, url } from "@utils/url-utils";
 import { Icon } from "astro-icon/components";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 
 const posts = await getSortedPosts();
 const recentPosts = posts.slice(0, 6);
+const atomUrl = new URL(url("/atom.xml"), Astro.site ?? Astro.url).href;
 ---
 
 <MainGridLayout title={i18n(I18nKey.atom)} description={i18n(I18nKey.atomDescription)}>
@@ -39,12 +41,12 @@ const recentPosts = posts.slice(0, 6);
                 </div>
                 <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                     <code class="bg-(--card-bg) px-3 py-2 rounded-lg text-sm font-mono text-75 border border-(--line-divider) break-all">
-                        {Astro.site}atom.xml
+                        {atomUrl}
                     </code>
                     <button
                         id="copy-atom-btn"
                         class="px-4 py-2 bg-(--primary) text-white rounded-lg hover:opacity-80 transition-all duration-200 font-medium text-sm whitespace-nowrap"
-                        data-url={`${Astro.site}atom.xml`}
+                        data-url={atomUrl}
                         data-copied-text={i18n(I18nKey.atomCopied)}
                         data-failed-text={i18n(I18nKey.rssCopyFailed)}
                     >
@@ -64,7 +66,7 @@ const recentPosts = posts.slice(0, 6);
                 {recentPosts.map((post) => (
                     <article class="bg-(--card-bg) rounded-xl p-4 border border-(--line-divider) hover:border-(--primary) transition-all duration-300">
                         <h3 class="text-lg font-semibold text-90 mb-2 hover:text-(--primary) transition-colors">
-                            <a href={`/posts/${post.id}/`} class="hover:underline">
+                            <a href={getPostUrlBySlug(post.id)} class="hover:underline">
                                 {post.data.title}
                             </a>
                         </h3>

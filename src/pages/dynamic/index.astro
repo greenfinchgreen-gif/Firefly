@@ -11,7 +11,7 @@ import "@/styles/pages/dynamic.css";
 import { url } from "@/utils/url-utils";
 
 if (!siteConfig.pages.dynamic) {
-	return Astro.redirect("/404/");
+	return Astro.redirect(`${import.meta.env.BASE_URL}404.html`);
 }
 
 const title = dynamicConfig.title || i18n(I18nKey.dynamic);

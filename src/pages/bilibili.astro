@@ -13,7 +13,7 @@ import { formatDateI18n } from "@/utils/date-utils";
 
 // 检查页面是否启用
 if (!siteConfig.pages.bilibili) {
-	return Astro.redirect("/404/");
+	return Astro.redirect(`${import.meta.env.BASE_URL}404.html`);
 }
 
 // 获取构建时间

@@ -1,5 +1,4 @@
 import { setMaxListeners } from "node:events";
-import cloudflare from "@astrojs/cloudflare";
 import { unified } from "@astrojs/markdown-remark";
 import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
@@ -99,16 +98,17 @@ function withFontCdnMirror(provider) {
 }
 
 const adapter = process.env.CF_WORKERS
-	? cloudflare({
+	? (await import("@astrojs/cloudflare")).default({
 			prerenderEnvironment: "node",
 		})
 	: undefined;
+const basePath = (process.env.BASE_PATH || "/").replace(/\/+$/, "");
 
 // https://astro.build/config
 export default defineConfig({
 	site: siteConfig.site_url,
 
-	base: "/",
+	base: process.env.BASE_PATH || "/",
 	trailingSlash: "always",
 
 	// 字体配置 - 只加载实际使用的字体，跳过未引用的以加快构建
@@ -278,43 +278,48 @@ export default defineConfig({
 				// 根据页面开关配置过滤sitemap
 				const url = new URL(page);
 				const pathname = url.pathname;
-				if (pathname === "/dynamic/" && !siteConfig.pages.dynamic) {
+				const pagePath =
+					basePath &&
+					(pathname === basePath || pathname.startsWith(`${basePath}/`))
+						? pathname.slice(basePath.length) || "/"
+						: pathname;
+				if (pagePath === "/dynamic/" && !siteConfig.pages.dynamic) {
 					return false;
 				}
-				if (pathname.startsWith("/gallery/") && !siteConfig.pages.gallery) {
+				if (pagePath.startsWith("/gallery/") && !siteConfig.pages.gallery) {
 					return false;
 				}
-				if (pathname === "/friends/" && !siteConfig.pages.friends) {
+				if (pagePath === "/friends/" && !siteConfig.pages.friends) {
 					return false;
 				}
-				if (pathname === "/guestbook/" && !siteConfig.pages.guestbook) {
+				if (pagePath === "/guestbook/" && !siteConfig.pages.guestbook) {
 					return false;
 				}
-				if (pathname === "/booknav/" && !siteConfig.pages.booknav) {
+				if (pagePath === "/booknav/" && !siteConfig.pages.booknav) {
 					return false;
 				}
-				if (pathname === "/bilibili/" && !siteConfig.pages.bilibili) {
+				if (pagePath === "/bilibili/" && !siteConfig.pages.bilibili) {
 					return false;
 				}
-				if (pathname === "/bangumi/" && !siteConfig.pages.bangumi) {
+				if (pagePath === "/bangumi/" && !siteConfig.pages.bangumi) {
 					return false;
 				}
-				if (pathname === "/vndb/" && !siteConfig.pages.vndb) {
+				if (pagePath === "/vndb/" && !siteConfig.pages.vndb) {
 					return false;
 				}
-				if (pathname === "/myanimelist/" && !siteConfig.pages.mal) {
+				if (pagePath === "/myanimelist/" && !siteConfig.pages.mal) {
 					return false;
 				}
 				// 动态页评论嵌入页：评论关闭时重定向到 /404/，不应进 sitemap
 				if (
-					pathname === "/dynamic/comments/" &&
+					pagePath === "/dynamic/comments/" &&
 					(dynamicConfig.showComment === false ||
 						!commentConfig.type ||
 						commentConfig.type === "none")
 				) {
 					return false;
 				}
-				if (pathname === "/sponsor/" && !siteConfig.pages.sponsor) {
+				if (pagePath === "/sponsor/" && !siteConfig.pages.sponsor) {
 					return false;
 				}
 				return true;

@@ -77,7 +77,12 @@ export function getSearchUrl(query: string): string {
 // 自我 canonical。分页（/2/）、文章页等无查询串的路径保持原样。
 export function getCanonicalUrl(urlObj: URL): string {
 	const pathname = urlObj.pathname;
-	if (pathname === "/archive/" || pathname === "/search/") {
+	const basePath = (import.meta.env.BASE_URL || "/").replace(/\/+$/, "");
+	const pagePath =
+		basePath && (pathname === basePath || pathname.startsWith(`${basePath}/`))
+			? pathname.slice(basePath.length) || "/"
+			: pathname;
+	if (pagePath === "/archive/" || pagePath === "/search/") {
 		return new URL(pathname, urlObj.origin).toString();
 	}
 	return urlObj.toString();
@@ -93,8 +98,18 @@ export function url(path: string): string {
 		return path;
 	}
 
+	const baseUrl = import.meta.env.BASE_URL || "/";
+	const normalizedBaseUrl = baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`;
+	if (
+		normalizedBaseUrl !== "/" &&
+		(path === normalizedBaseUrl.slice(0, -1) ||
+			path.startsWith(normalizedBaseUrl))
+	) {
+		return path;
+	}
+
 	// 只有本地相对路径才添加BASE_URL
-	return joinUrl("", import.meta.env.BASE_URL, path);
+	return joinUrl("", baseUrl, path);
 }
 
 // 内容详情页路径模式：文章(/posts/、/post/) 与 项目详情(/projects/<slug>/)
